@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoExcusesFit", "NoExcusesFit\NoExcusesFit.csproj", "{0F210B2C-5876-4F49-ACDB-B5AF44647299}"
 EndProject
@@ -22,6 +22,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 - Tests", "05 - Tests", "{F774C49E-C83C-4E98-A144-348755AAC38A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoExcusesFit.Tests", "NoExcusesFit.Tests\NoExcusesFit.Tests.csproj", "{355E74D2-9B8A-46F8-ABDD-BE88BC52C19D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B02038C-DD49-431B-8723-9D80FE21A046}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{5D5F3BE4-9C27-4EC5-B8FB-F91B22B9AC11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{48EA16FA-EE8F-4978-9F5D-20A81C6F69D3}"
+	ProjectSection(SolutionItems) = preProject
+		build.yml = build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +71,8 @@ Global
 		{2C1BCD91-F27D-4798-94BC-811743715F4A} = {424B3DC4-0DAF-4758-85E0-2B0DD126220F}
 		{2D473C8C-44A6-49F5-9DFF-13D4558599E2} = {47CDA6D3-4ABE-4D9E-8323-CA8B78402C6C}
 		{355E74D2-9B8A-46F8-ABDD-BE88BC52C19D} = {F774C49E-C83C-4E98-A144-348755AAC38A}
+		{5D5F3BE4-9C27-4EC5-B8FB-F91B22B9AC11} = {6B02038C-DD49-431B-8723-9D80FE21A046}
+		{48EA16FA-EE8F-4978-9F5D-20A81C6F69D3} = {5D5F3BE4-9C27-4EC5-B8FB-F91B22B9AC11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B406A2AE-3C8D-4B1F-A2AB-EE78921933FF}
