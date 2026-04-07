@@ -17,5 +17,5 @@ obj/
 coverage/
 *.coverage
 
-# Sensível
+# Sensivel
 appsettings.Development.json
