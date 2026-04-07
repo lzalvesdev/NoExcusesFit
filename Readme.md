@@ -1,7 +1,7 @@
 
 # NoExcusesFit API
 
-API REST para gestão esportivas — com autenticação segura e controle de acesso por perfil.
+API REST simulando um sistema de gestão esportiva. — com autenticação segura e controle de acesso por perfil.
 
 ---
 
