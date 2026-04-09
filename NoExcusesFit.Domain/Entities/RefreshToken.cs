@@ -19,13 +19,13 @@ namespace NoExcusesFit.Domain.Entities
         public RefreshToken(Guid userAccountId, string token, DateTime expiresAt)
         {
             if (userAccountId == Guid.Empty)
-                throw new ArgumentException("UserAccountId inválido.", nameof(userAccountId));
+                throw new ArgumentException("UserAccountId inválido.");
 
             if (string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Token inválido.", nameof(token));
+                throw new ArgumentException("Token inválido.");
 
             if (expiresAt <= DateTime.UtcNow)
-                throw new ArgumentException("Data de expiração inválida.", nameof(expiresAt));
+                throw new ArgumentException("Data de expiração inválida.");
 
             UserAccountId = userAccountId;
             Token = token;

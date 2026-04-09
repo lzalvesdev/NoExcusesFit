@@ -11,7 +11,7 @@ namespace NoExcusesFit.Domain.Entities
         public Coach(Guid userAccountId)
         {
             if (userAccountId == Guid.Empty)
-                throw new ArgumentException("UserAccountId inválido.", nameof(userAccountId));
+                throw new ArgumentException("UserAccountId inválido.");
 
             UserAccountId = userAccountId;
         }

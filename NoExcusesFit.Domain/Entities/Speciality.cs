@@ -11,7 +11,7 @@
         public Speciality(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Descrição é obrigatória.", nameof(description));
+                throw new ArgumentException("Descrição é obrigatória.");
 
             Description = description.Trim();
             CreatedAt = DateTime.UtcNow;
@@ -20,7 +20,7 @@
         public void UpdateDescription(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Descrição é obrigatória.", nameof(description));
+                throw new ArgumentException("Descrição é obrigatória.");
 
             Description = description.Trim();
         }

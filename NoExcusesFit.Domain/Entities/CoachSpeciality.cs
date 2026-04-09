@@ -10,10 +10,10 @@
         public CoachSpeciality(Guid coachId, int specialityId)
         {
             if (coachId == Guid.Empty)
-                throw new ArgumentException("CoachId é obrigatório.", nameof(coachId));
+                throw new ArgumentException("CoachId é obrigatório.");
 
             if(specialityId == 0)
-                throw new ArgumentException("SpecialityId é obrigatório.", nameof(specialityId));
+                throw new ArgumentException("SpecialityId é obrigatório.");
 
             CoachId = coachId;
             SpecialityId = specialityId;

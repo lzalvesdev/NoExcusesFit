@@ -11,10 +11,10 @@ namespace NoExcusesFit.Domain.Entities
         public Athlete(Guid userAccountId, Guid coachId)
         {
             if (userAccountId == Guid.Empty)
-                throw new ArgumentException("UserAccountId inválido.", nameof(userAccountId));
+                throw new ArgumentException("UserAccountId inválido.");
 
             if (coachId == Guid.Empty)
-                throw new ArgumentException("CoachId inválido.", nameof(coachId));
+                throw new ArgumentException("CoachId inválido.");
 
             UserAccountId = userAccountId;
             CoachId = coachId;
@@ -23,7 +23,7 @@ namespace NoExcusesFit.Domain.Entities
         public void UpdateCoach(Guid coachId)
         {
             if (coachId == Guid.Empty)
-                throw new ArgumentException("CoachId inválido.", nameof(coachId));
+                throw new ArgumentException("CoachId inválido.");
 
             CoachId = coachId;
         }

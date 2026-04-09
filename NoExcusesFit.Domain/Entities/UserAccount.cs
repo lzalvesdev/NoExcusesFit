@@ -17,13 +17,13 @@ namespace NoExcusesFit.Domain.Entities
             )
         {
             if (string.IsNullOrWhiteSpace(firstName))
-                throw new ArgumentException("Nome é obrigatório.", nameof(firstName));
+                throw new ArgumentException("Nome é obrigatório.");
             
             if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentException("Email é obrigatório.", nameof(email));
+                throw new ArgumentException("Email é obrigatório.");
 
             if(string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Senha é obrigatória.", nameof(password));
+                throw new ArgumentException("Senha é obrigatória.");
             
             FirstName = firstName.Trim();
             Email = email.ToLower().Trim();
