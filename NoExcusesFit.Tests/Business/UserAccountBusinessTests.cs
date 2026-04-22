@@ -2,9 +2,11 @@
 using Moq;
 using NoExcusesFit.Domain.DTOs.UserAccount;
 using NoExcusesFit.Domain.Entities;
+using NoExcusesFit.Domain.Interfaces;
 using NoExcusesFit.Domain.Interfaces.Authentication;
 using NoExcusesFit.Domain.Interfaces.Business;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Business.Tests
 {
@@ -14,6 +16,7 @@ namespace NoExcusesFit.Business.Tests
         private readonly Mock<IUserRoleRepository> _userRoleRepository;
         private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
         private readonly Mock<IRefreshTokenRepository> _refreshTokenRepository;
+        private readonly Mock<IUnitOfWork> _unitOfWork;
         private readonly IUserAccountBusiness _business;
 
         public UserAccountBusinessTests()
@@ -22,12 +25,14 @@ namespace NoExcusesFit.Business.Tests
             _userRoleRepository = new Mock<IUserRoleRepository>();
             _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
             _refreshTokenRepository = new Mock<IRefreshTokenRepository>();
+            _unitOfWork = new Mock<IUnitOfWork>();
 
             _business = new UserAccountBusiness(
                 _userAccountRepository.Object,
                 _userRoleRepository.Object,
                 _jwtTokenGenerator.Object,
-                _refreshTokenRepository.Object
+                _refreshTokenRepository.Object,
+                _unitOfWork.Object
             );
         }
 
