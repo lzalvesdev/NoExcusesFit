@@ -2,9 +2,11 @@
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Enums;
 using NoExcusesFit.Domain.Exceptions;
+using NoExcusesFit.Domain.Interfaces;
 using NoExcusesFit.Domain.Interfaces.Authentication;
 using NoExcusesFit.Domain.Interfaces.Business;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Business
 {
@@ -14,16 +16,19 @@ namespace NoExcusesFit.Business
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUnitOfWork _unitOfWork;
         public UserAccountBusiness(
                 IUserAccountRepository userAccountRepository,
                 IUserRoleRepository userRoleRepository,
                 IJwtTokenGenerator jwtTokenGenerator,
-                IRefreshTokenRepository refreshTokenRepository)
+                IRefreshTokenRepository refreshTokenRepository,
+                IUnitOfWork unitOfWork)
         {
             _userAccountRepository = userAccountRepository;
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRoleRepository = userRoleRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _unitOfWork = unitOfWork;   
         }
 
         public async Task<IEnumerable<UserAccountResponse>> GetAllAsync(int page, int pageSize)
@@ -63,10 +68,15 @@ namespace NoExcusesFit.Business
                 password: passwordHash
             );
 
-            await _userAccountRepository.CreateAsync(user);
-
             var defaultRole = new UserRole(user.Id, (int)UserRoleType.User);
-            await _userRoleRepository.AssignUserRoleAsync(defaultRole);
+
+            using var uow = _unitOfWork;
+            uow.Begin();
+
+            await _userAccountRepository.CreateAsync(user, uow.Connection, uow.Transaction);
+            await _userRoleRepository.AssignUserRoleAsync(defaultRole, uow.Connection, uow.Transaction);
+
+            uow.Commit();
         }
 
         public async Task<AuthResponse> Login(LoginRequestDto request)
@@ -111,7 +121,11 @@ namespace NoExcusesFit.Business
             var roles = await _userRoleRepository.GetRolesAsync(user.Id);
 
             token.Revoke();
-            await _refreshTokenRepository.UpdateAsync(token);
+
+            using var uow = _unitOfWork;
+            uow.Begin();
+
+            await _refreshTokenRepository.UpdateAsync(token, uow.Connection, uow.Transaction);
 
             var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.FirstName, user.Email, roles);
             var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
@@ -122,7 +136,9 @@ namespace NoExcusesFit.Business
                expiresAt: DateTime.UtcNow.AddDays(30)
            );
 
-            await _refreshTokenRepository.CreateAsync(newRefreshTokenEntity);
+            await _refreshTokenRepository.CreateAsync(newRefreshTokenEntity, uow.Connection, uow.Transaction);
+
+            uow.Commit();
 
             return new AuthResponse(newAccessToken, newRefreshToken, user.FirstName, user.Email);
         }

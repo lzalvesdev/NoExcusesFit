@@ -4,6 +4,7 @@ using NoExcusesFit.Domain.DTOs.Speciality;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Enums;
 using NoExcusesFit.Domain.Exceptions;
+using NoExcusesFit.Domain.Interfaces;
 using NoExcusesFit.Domain.Interfaces.Business;
 using NoExcusesFit.Domain.Interfaces.Repositories;
 
@@ -14,15 +15,18 @@ public class CoachBusiness : ICoachBusiness
     private readonly ICoachRepository _coachRepository;
     private readonly ICoachSpecialityRepository _coachSpecialityRepository;
     private readonly IUserRoleRepository _userRoleRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CoachBusiness(
         ICoachRepository coachRepository, 
         ICoachSpecialityRepository coachSpecialityRepository,
-        IUserRoleRepository userRoleRepository)
+        IUserRoleRepository userRoleRepository,
+        IUnitOfWork unitOfWork)
     {
         _coachRepository = coachRepository;
         _coachSpecialityRepository = coachSpecialityRepository;
         _userRoleRepository = userRoleRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<CoachResponseDto>> GetAllAsync(int page, int pageSize)
@@ -62,10 +66,15 @@ public class CoachBusiness : ICoachBusiness
            request.UserAccountId
         );
 
-        await _coachRepository.AddAsync(coach);
-
         var coachRole = new UserRole(coach.UserAccountId, (int)UserRoleType.Coach);
-        await _userRoleRepository.AssignUserRoleAsync(coachRole);
+
+        using var uow = _unitOfWork;
+        uow.Begin();
+
+        await _coachRepository.AddAsync(coach, uow.Connection, uow.Transaction);
+        await _userRoleRepository.AssignUserRoleAsync(coachRole, uow.Connection, uow.Transaction);
+
+        uow.Commit();
 
         return new CoachCreatedResponseDto(coach.Id);
     }
@@ -87,7 +96,16 @@ public class CoachBusiness : ICoachBusiness
         if (coach is null)
             throw new NotFoundException("Treinador não encontrado.");
 
-        await _coachRepository.DeleteAsync(id);
-        await _userRoleRepository.DeleteRoleAsync(coach.UserAccountId, (int)UserRoleType.Coach);
+        using var uow = _unitOfWork;
+        uow.Begin();
+
+        await _coachRepository.DeleteAsync(id, uow.Connection, uow.Transaction);
+        await _userRoleRepository.DeleteRoleAsync(
+            coach.UserAccountId, 
+            (int)UserRoleType.Coach,
+            uow.Connection,
+            uow.Transaction);
+
+        uow.Commit();
     }
 }

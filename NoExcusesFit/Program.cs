@@ -7,6 +7,7 @@ using NoExcusesFit.Business;
 using NoExcusesFit.Data.Authentication;
 using NoExcusesFit.Data.Persistence;
 using NoExcusesFit.Data.Repositories;
+using NoExcusesFit.Domain.Interfaces;
 using NoExcusesFit.Domain.Interfaces.Authentication;
 using NoExcusesFit.Domain.Interfaces.Business;
 using NoExcusesFit.Domain.Interfaces.Repositories;
@@ -69,6 +70,7 @@ builder.Services.AddScoped<ISpecialityBusiness, SpecialityBusiness>();
 builder.Services.AddScoped<ISpecialityRepository, SpecialityRepository>();
 builder.Services.AddScoped<ICoachSpecialityRepository, CoachSpecialityRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // JwtSettings
 builder.Services.Configure<JwtSettings>(

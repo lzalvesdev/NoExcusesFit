@@ -2,6 +2,7 @@
 using NoExcusesFit.Data.Persistence;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Data.Repositories
 {
@@ -23,6 +24,15 @@ namespace NoExcusesFit.Data.Repositories
             using var connection = _dapperContext.CreateConnection();
 
             await connection.ExecuteAsync(sql, refreshToken);
+        }
+
+        public async Task CreateAsync(RefreshToken refreshToken, IDbConnection connection, IDbTransaction transaction)
+        {
+            const string sql = @"
+                INSERT INTO RefreshToken(Id, UserAccountId, Token, ExpiresAt, CreatedAt)
+                VALUES (@Id, @UserAccountId, @Token, @ExpiresAt, @CreatedAt)";
+
+            await connection.ExecuteAsync(sql, refreshToken, transaction);
         }
 
         public async Task<RefreshToken?> GetByTokenAsync(string token)
@@ -47,6 +57,16 @@ namespace NoExcusesFit.Data.Repositories
             using var connection = _dapperContext.CreateConnection();
 
             await connection.ExecuteAsync(sql, refreshToken);
+        }
+
+        public async Task UpdateAsync(RefreshToken refreshToken, IDbConnection connection, IDbTransaction transaction)
+        {
+            const string sql = @"
+                UPDATE RefreshToken 
+                SET RevokedAt = @RevokedAt
+                WHERE Id = @Id";
+
+            await connection.ExecuteAsync(sql, refreshToken, transaction);
         }
     }
 }

@@ -1,8 +1,8 @@
 using Dapper;
 using NoExcusesFit.Data.Persistence;
-using NoExcusesFit.Domain.DTOs.Athlete;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Data.Repositories;
 
@@ -24,6 +24,15 @@ public class AthleteRepository : IAthleteRepository
         using var connection = _dapperContext.CreateConnection();
 
         await connection.ExecuteAsync(sql, athlete);
+    }
+
+    public async Task AddAsync(Athlete athlete, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            INSERT INTO Athlete (Id, UserAccountId, CoachId)
+            VALUES (@Id, @UserAccountId, @CoachId);";
+
+        await connection.ExecuteAsync(sql, athlete, transaction);
     }
 
     public async Task<Athlete?> GetByIdAsync(Guid id)
@@ -72,5 +81,14 @@ public class AthleteRepository : IAthleteRepository
 
         using var connection = _dapperContext.CreateConnection();
         await connection.ExecuteAsync(sql, new { Id = id });
+    }
+
+    public async Task DeleteAsync(Guid id, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            DELETE FROM Athlete
+            WHERE Id = @Id";
+
+        await connection.ExecuteAsync(sql, new { Id = id }, transaction);
     }
 }

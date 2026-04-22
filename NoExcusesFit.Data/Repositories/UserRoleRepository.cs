@@ -2,6 +2,7 @@ using Dapper;
 using NoExcusesFit.Data.Persistence;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Data.Repositories;
 
@@ -36,6 +37,15 @@ public class UserRoleRepository : IUserRoleRepository
 
         using var connection = _dapperContext.CreateConnection();
         await connection.ExecuteAsync(sql, userRole);
+    }
+
+    public async Task AssignUserRoleAsync(UserRole userRole, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            INSERT INTO UserRole (UserAccountId, RoleId)
+            VALUES (@UserAccountId, @RoleId);";
+
+        await connection.ExecuteAsync(sql, userRole, transaction);
     }
 
     public async Task DeleteRoleAsync(Guid userAccountId, int roleId)

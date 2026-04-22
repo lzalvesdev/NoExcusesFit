@@ -3,6 +3,7 @@ using NoExcusesFit.Data.Persistence;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Interfaces.Repositories;
 using NoExcusesFit.Domain.QueryResults;
+using System.Data;
 
 namespace NoExcusesFit.Data.Repositories;
 
@@ -24,6 +25,15 @@ public class CoachRepository : ICoachRepository
         using var connection = _dapperContext.CreateConnection();
 
         await connection.ExecuteAsync(sql, coach);
+    }
+
+    public async Task AddAsync(Coach coach, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            INSERT INTO Coach (Id, UserAccountId)
+            VALUES (@Id, @UserAccountId);";
+
+        await connection.ExecuteAsync(sql, coach, transaction);
     }
 
     public async Task<CoachQueryResult?> GetByIdAsync(Guid id)
@@ -69,7 +79,7 @@ public class CoachRepository : ICoachRepository
             FROM Coach c
             LEFT JOIN UserAccount u ON c.UserAccountId = u.Id
             ORDER BY c.Id
-            OFFSET @Skip ROWS 
+            OFFSET @Skip ROWS
             FETCH NEXT @Take ROWS ONLY";
 
         var coaches = (await connection.QueryAsync<CoachQueryResult>(
@@ -133,5 +143,14 @@ public class CoachRepository : ICoachRepository
 
         using var connection = _dapperContext.CreateConnection();
         await connection.ExecuteAsync(sql, new { Id = id });
+    }
+
+    public async Task DeleteAsync(Guid id, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            DELETE FROM Coach
+            WHERE Id = @Id";
+
+        await connection.ExecuteAsync(sql, new { Id = id }, transaction);
     }
 } 

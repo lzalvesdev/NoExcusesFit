@@ -2,6 +2,7 @@ using Dapper;
 using NoExcusesFit.Data.Persistence;
 using NoExcusesFit.Domain.Entities;
 using NoExcusesFit.Domain.Interfaces.Repositories;
+using System.Data;
 
 namespace NoExcusesFit.Data.Repositories;
 
@@ -23,6 +24,15 @@ public class UserAccountRepository : IUserAccountRepository
         using var connection = _dapperContext.CreateConnection();
 
         await connection.ExecuteAsync(sql, userAccount);
+    }
+
+    public async Task CreateAsync(UserAccount userAccount, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            INSERT INTO UserAccount (Id, FirstName, Password, Email)
+            VALUES (@Id, @FirstName, @Password, @Email);";
+
+        await connection.ExecuteAsync(sql, userAccount, transaction);
     }
 
     public async Task<UserAccount?> GetByEmailAsync(string email)

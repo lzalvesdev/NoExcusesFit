@@ -17,14 +17,9 @@ public class SpecialityBusiness : ISpecialityBusiness
 
     public async Task<IEnumerable<SpecialityDto>> GetAllAsync()
     {
-
         var speciality = await _specialityRepository.GetAllAsync();
 
-        return speciality.Select(s => new SpecialityDto(
-             s.Id,
-             s.Description,
-             s.CreatedAt
-        ));
+        return speciality.Select(s => new SpecialityDto(s.Id, s.Description, s.CreatedAt));
     }
 
     public async Task<SpecialityResponseDto> AddAsync(CreateSpecialityRequestDto request)
@@ -39,7 +34,6 @@ public class SpecialityBusiness : ISpecialityBusiness
     {
         
         var speciality = await _specialityRepository.GetByIdAsync(id);
-
         if (speciality is null)
             throw new NotFoundException("Especialidade não encontrada.");
 
@@ -51,7 +45,6 @@ public class SpecialityBusiness : ISpecialityBusiness
     public async Task DeleteAsync(int id)
     {
         var speciality = await _specialityRepository.GetByIdAsync(id);
-
         if (speciality is null)
             throw new NotFoundException("Especialidade não encontrada.");
 
