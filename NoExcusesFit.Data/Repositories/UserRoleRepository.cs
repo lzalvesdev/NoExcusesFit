@@ -58,4 +58,12 @@ public class UserRoleRepository : IUserRoleRepository
         await connection.ExecuteAsync(sql, new { UserAccountId = userAccountId, RoleId = roleId });
     }
 
+    public async Task DeleteRoleAsync(Guid userAccountId, int roleId, IDbConnection connection, IDbTransaction transaction)
+    {
+        const string sql = @"
+            DELETE FROM UserRole
+            WHERE UserAccountId = @UserAccountId AND RoleId = @RoleId;";
+
+        await connection.ExecuteAsync(sql, new { UserAccountId = userAccountId, RoleId = roleId }, transaction);
+    }
 }
